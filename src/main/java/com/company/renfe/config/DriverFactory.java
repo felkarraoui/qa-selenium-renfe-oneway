@@ -12,7 +12,7 @@ import java.time.Duration;
 public class DriverFactory {
     public static WebDriver createDriver() {
         String browser = Config.BROWSER.toLowerCase();
-        boolean headless = Boolean.parseBoolean(System.getProperty("headless", "true"));
+        boolean headless = Boolean.parseBoolean(System.getProperty("headless", "false"));
 
         WebDriver driver;
         switch (browser) {
