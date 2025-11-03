@@ -57,7 +57,7 @@ public class PurchaseOneWayTicketTest {
 
         // 8. On the results page, verify that each displayed result shows both journey time and price.
 
-        List<WebElement> cards = results.findAvailableCardsInEnabledWeekDays(Duration.ofSeconds(10));
+        List<WebElement> cards = results.findAvailableCardsInEnabledWeekDays(Config.DEFAULT_EXPLICIT_WAIT);
         if (cards.isEmpty()) {
             throw new SkipException("No availability.");
         }
@@ -69,7 +69,7 @@ public class PurchaseOneWayTicketTest {
                 cards,
                 TestData.MIN_PRICE,
                 TestData.MAX_PRICE,
-                Duration.ofSeconds(10)
+                Config.DEFAULT_EXPLICIT_WAIT
         );
 
         Assert.assertTrue(
@@ -78,11 +78,11 @@ public class PurchaseOneWayTicketTest {
         );
 
         // Click on the "Select" (Basic) button when it is visible and clickable
-        boolean basicSelected = results.clickSelectBasicButton(Duration.ofSeconds(10));
+        boolean basicSelected = results.clickSelectBasicButton(Config.DEFAULT_EXPLICIT_WAIT);
         Assert.assertTrue(basicSelected, "The 'Select' (Basic) button was not visible/clickable in time.");
 
         // Use FareSelectionPage to continue with the Basic option (wait and click).
-        fare.continueWithBasicFare(Duration.ofSeconds(10));
+        fare.continueWithBasicFare(Config.DEFAULT_EXPLICIT_WAIT);
 
         //Final assert: verify that the passenger details page is displayed.
         Assert.assertTrue(passenger.isDisplayed(), "Passenger details page should be displayed.");
