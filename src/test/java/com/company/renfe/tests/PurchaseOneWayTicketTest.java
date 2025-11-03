@@ -2,7 +2,9 @@ package com.company.renfe.tests;
 
 import com.company.renfe.config.Config;
 import com.company.renfe.config.DriverFactory;
+import com.company.renfe.pages.FareSelectionPage;
 import com.company.renfe.pages.HomePage;
+import com.company.renfe.pages.PassengerDetailsPage;
 import com.company.renfe.pages.ResultsPage;
 import com.company.renfe.tests.data.TestData;
 import org.openqa.selenium.WebDriver;
@@ -19,12 +21,16 @@ public class PurchaseOneWayTicketTest {
     private WebDriver driver;
     private HomePage home;
     private ResultsPage results;
+    private FareSelectionPage fare;
+    private PassengerDetailsPage passenger;
 
     @BeforeClass
     public void setup() {
         driver = DriverFactory.createDriver();
         home = new HomePage(driver);
         results = new ResultsPage(driver);
+        fare = new FareSelectionPage(driver);
+        passenger = new PassengerDetailsPage(driver);
     }
 
 
@@ -50,10 +56,10 @@ public class PurchaseOneWayTicketTest {
         home.search();
 
         // 8. On the results page, verify that each displayed result shows both journey time and price.
-        //results.waitForResults();
+
         List<WebElement> cards = results.findAvailableCardsInEnabledWeekDays(Duration.ofSeconds(10));
         if (cards.isEmpty()) {
-            throw new SkipException("Sin disponibilidad.");
+            throw new SkipException("No availability.");
         }
 
         Assert.assertTrue(results.allResultsShowTimeAndPrice(cards), "Each result must show journey time and price.");
@@ -68,12 +74,18 @@ public class PurchaseOneWayTicketTest {
 
         Assert.assertTrue(
                 clicked,
-                String.format("No se encontró ninguna card con precio entre %.2f y %.2f", TestData.MIN_PRICE, TestData.MAX_PRICE)
+                String.format("No card found with a price between %.2f y %.2f", TestData.MIN_PRICE, TestData.MAX_PRICE)
         );
 
         // Click on the "Select" (Basic) button when it is visible and clickable
         boolean basicSelected = results.clickSelectBasicButton(Duration.ofSeconds(10));
-        Assert.assertTrue(basicSelected, "El botón 'Seleccionar' (Basic) no estuvo visible/clicable a tiempo.");
+        Assert.assertTrue(basicSelected, "The 'Select' (Basic) button was not visible/clickable in time.");
+
+        // Use FareSelectionPage to continue with the Basic option (wait and click).
+        fare.continueWithBasicFare(Duration.ofSeconds(10));
+
+        //Final assert: verify that the passenger details page is displayed.
+        Assert.assertTrue(passenger.isDisplayed(), "Passenger details page should be displayed.");
 
 
     }

@@ -146,6 +146,7 @@ public class ResultsPage {
 
         for (WebElement card : cards) {
             String idx = extractCardIndex(card);
+
             if (idx == null) continue;
 
             try {
@@ -155,7 +156,6 @@ public class ResultsPage {
 
                 double price = PriceParser.parseEuro(title);
 
-                System.out.println("el precio parceado: " + price);
                 if (Double.isNaN(price)) continue;
 
                 if (price >= min && price <= max) {
